@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">WhereToGo</string>
     <string name="action_settings">Settings</string>
     <string name="drawer_item_home">Home</string>
     <string name="drawer_item_free_play">Free Play</string>
@@ -9,4 +9,13 @@
     <string name="drawer_item_help">Help</string>
     <string name="drawer_item_open_source">Open Source</string>
     <string name="drawer_item_contact">Contact</string>
+    
+    <string name="drawer_item_friend_list">Мои друзья</string>
+    <string name="drawer_item_invitation">Приглашения</string>
+    <string name="drawer_item_events">Мероприятия</string>
+    <string name="drawer_item_cinema">Кино</string>
+    <string name="drawer_item_theater">Театры</string>
+    <string name="drawer_item_museum">Выставки</string>
+    <string name="drawer_item_about">О Программе</string>
+
 </resources>
