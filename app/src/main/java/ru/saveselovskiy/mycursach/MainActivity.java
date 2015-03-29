@@ -1,14 +1,18 @@
 package ru.saveselovskiy.mycursach;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
@@ -19,10 +23,14 @@ import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 
 import com.mikepenz.iconics.typeface.FontAwesome;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.Nameable;
+import com.vk.sdk.VKScope;
+import com.vk.sdk.VKUIHelper;
 
+import ru.saveselovskiy.mycursach.FriendList.FriendListFragment;
 
 public class MainActivity extends ActionBarActivity {
-
+    private Fragment currentFragment = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,14 +61,41 @@ public class MainActivity extends ActionBarActivity {
 
             @Override
             public void onDrawerClosed(View drawerView) {
+
             }
         }).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l, IDrawerItem iDrawerItem) {
 
             }
+        }).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+            @Override
+            // Обработка клика
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
+                switch (position){
+                    case 1:{
+                        if (currentFragment != null && currentFragment instanceof FriendListFragment){
+                            break;
+                        }
+                        currentFragment = FriendListFragment.newInstance();
+                        getFragmentManager().beginTransaction().add(R.id.parent_container, currentFragment,FriendListFragment.TAG).commit();
+                        Toast.makeText(MainActivity.this, "did pressed" + position, Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                    default:{
+                        if (currentFragment == null) break;
+                        setTitle(R.string.app_name);
+                        getFragmentManager().beginTransaction().remove(currentFragment).commit();
+                        currentFragment = null;
+                    }
+                }
+                closeContextMenu();
+
+            }
         })
                 .build();
+        currentFragment = FriendListFragment.newInstance();
+        getFragmentManager().beginTransaction().add(R.id.parent_container, currentFragment,FriendListFragment.TAG).commit();
     }
 
 
@@ -84,5 +119,23 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        VKUIHelper.onResume(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        VKUIHelper.onDestroy(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        VKUIHelper.onActivityResult(this, requestCode, resultCode, data);
     }
 }
