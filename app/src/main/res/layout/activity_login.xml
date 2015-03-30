@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@drawable/login_background">
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Авторизация через ВКонтакте"
+        android:text="Авторизация"
         android:id="@+id/LoginButton"
         android:layout_gravity="center"
         android:textColor="#fffffefa"
-        android:background="#ff596fff" />
-</FrameLayout>
+        android:background="#ff426993"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:elegantTextHeight="false"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp" />
+
+</RelativeLayout>

@@ -2,7 +2,9 @@ package ru.saveselovskiy.mycursach.Login;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +32,7 @@ public class Login extends Activity {//implements View.OnClickListener{
             VKScope.FRIENDS,
             VKScope.NOHTTPS
     };
+    public static final String MyPREFERENCES = "MyPrefs" ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +77,8 @@ public class Login extends Activity {//implements View.OnClickListener{
 
         @Override
         public void onReceiveNewToken(VKAccessToken newToken) {
+            SharedPreferences sPref = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sPref.edit();
             Intent intent = new Intent(getApplication(),MainActivity.class);
             startActivity(intent);
         }
