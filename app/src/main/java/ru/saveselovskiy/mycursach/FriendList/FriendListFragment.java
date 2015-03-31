@@ -13,6 +13,7 @@ import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
 import com.vk.sdk.api.VKParameters;
 import com.vk.sdk.api.VKRequest;
+import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.methods.VKApiFriends;
 
 import ru.saveselovskiy.mycursach.R;
@@ -43,8 +44,16 @@ public class FriendListFragment extends Fragment {
         ListView rootView = (ListView)inflater.inflate(R.layout.fragment_friend_list, container,
                 false);
         VKApiFriends api = new VKApiFriends();
-        api.get().addExtraParameters(VKParameters.from(VKApiConst.FIELDS, "last_name"));
-
+//        api.get().addExtraParameters(VKParameters.from(VKApiConst.FIELDS, "last_name"));
+        VKRequest request = api.get();
+        request.addExtraParameters(VKParameters.from(VKApiConst.FIELDS, "last_name"));
+        request.executeWithListener(new VKRequest.VKRequestListener() {
+            @Override
+            public void onComplete(VKResponse response) {
+                super.onComplete(response);
+//                response.json.getJSONArray()
+            }
+        });
 //        api.get(VKParameters.from(VKApiConst.FIELDS,"last_name"));
         ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(), R.layout.friend_list_item,new  String[]{"Рыжик", "Барсик", "Мурзик"});
         getActivity().setTitle("Друзья");
