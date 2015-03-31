@@ -9,6 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.vk.sdk.api.VKApi;
+import com.vk.sdk.api.VKApiConst;
+import com.vk.sdk.api.VKParameters;
+import com.vk.sdk.api.VKRequest;
+import com.vk.sdk.api.methods.VKApiFriends;
+
 import ru.saveselovskiy.mycursach.R;
 
 /**
@@ -36,6 +42,10 @@ public class FriendListFragment extends Fragment {
                              Bundle savedInstanceState) {
         ListView rootView = (ListView)inflater.inflate(R.layout.fragment_friend_list, container,
                 false);
+        VKApiFriends api = new VKApiFriends();
+        api.get().addExtraParameters(VKParameters.from(VKApiConst.FIELDS, "last_name"));
+
+//        api.get(VKParameters.from(VKApiConst.FIELDS,"last_name"));
         ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(), R.layout.friend_list_item,new  String[]{"Рыжик", "Барсик", "Мурзик"});
         getActivity().setTitle("Друзья");
         rootView.setAdapter(adapter);

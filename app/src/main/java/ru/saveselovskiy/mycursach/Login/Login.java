@@ -33,14 +33,19 @@ public class Login extends Activity {//implements View.OnClickListener{
             VKScope.NOHTTPS
     };
     public static final String MyPREFERENCES = "MyPrefs" ;
+    private String tokenKey = "accessToken";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        VKSdk.initialize(sdkListener, "4850781");
-//        boolean checkToken = VKSdk.wakeUpSession(this.getBaseContext());
 
-//        String[] fingerprint = VKUtil.getCertificateFingerprint(this, this.getPackageName());
-//        Log.d("Fingerprint", fingerprint[0]);
+
+        VKAccessToken token = VKAccessToken.tokenFromSharedPreferences(this, tokenKey);
+        if (token != null){
+            VKSdk.initialize(sdkListener, "4850781",token);
+        }
+        else{
+            VKSdk.initialize(sdkListener, "4850781");
+        }
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -65,7 +70,8 @@ public class Login extends Activity {//implements View.OnClickListener{
 
         @Override
         public void onTokenExpired(VKAccessToken expiredToken) {
-            VKSdk.authorize(sMyScope);
+            Intent intent = new Intent(getApplication(),MainActivity.class);
+            startActivity(intent);
         }
 
         @Override
@@ -77,8 +83,7 @@ public class Login extends Activity {//implements View.OnClickListener{
 
         @Override
         public void onReceiveNewToken(VKAccessToken newToken) {
-            SharedPreferences sPref = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sPref.edit();
+            newToken.saveTokenToSharedPreferences(getApplicationContext(), tokenKey);
             Intent intent = new Intent(getApplication(),MainActivity.class);
             startActivity(intent);
         }
