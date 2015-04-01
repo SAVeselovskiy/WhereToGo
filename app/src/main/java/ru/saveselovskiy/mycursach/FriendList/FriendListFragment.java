@@ -16,6 +16,10 @@ import com.vk.sdk.api.VKRequest;
 import com.vk.sdk.api.VKResponse;
 import com.vk.sdk.api.methods.VKApiFriends;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import ru.saveselovskiy.mycursach.R;
 
 /**
@@ -45,12 +49,20 @@ public class FriendListFragment extends Fragment {
                 false);
         VKApiFriends api = new VKApiFriends();
 //        api.get().addExtraParameters(VKParameters.from(VKApiConst.FIELDS, "last_name"));
-        VKRequest request = api.get();
-        request.addExtraParameters(VKParameters.from(VKApiConst.FIELDS, "last_name"));
+        VKRequest request = api.get(VKParameters.from(VKApiConst.FIELDS, "last_name"));
+//        request.addExtraParameters(VKParameters.from(VKApiConst.FIELDS, "last_name"));
         request.executeWithListener(new VKRequest.VKRequestListener() {
             @Override
             public void onComplete(VKResponse response) {
                 super.onComplete(response);
+                JSONObject obj =  response.json;
+                try {
+                    JSONObject usersInfo = (JSONObject) obj.get("response");
+                    JSONArray users = (JSONArray) usersInfo.get("items");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+//                obj.getJSONArray();
 //                response.json.getJSONArray()
             }
         });

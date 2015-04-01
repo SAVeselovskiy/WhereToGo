@@ -68,11 +68,6 @@ public class MainActivity extends ActionBarActivity {
             }
         }).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l, IDrawerItem iDrawerItem) {
-
-            }
-        }).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-            @Override
             // Обработка клика
             public void onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
                 switch (position){
@@ -97,8 +92,10 @@ public class MainActivity extends ActionBarActivity {
             }
         })
                 .build();
-        currentFragment = FriendListFragment.newInstance();
-        getFragmentManager().beginTransaction().add(R.id.parent_container, currentFragment,FriendListFragment.TAG).commit();
+        if (currentFragment != null){
+            currentFragment = FriendListFragment.newInstance();
+            getFragmentManager().beginTransaction().add(R.id.parent_container, currentFragment, FriendListFragment.TAG).commit();
+        }
     }
 
 
@@ -151,8 +148,13 @@ public class MainActivity extends ActionBarActivity {
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {
                         //SomeActivity - имя класса Activity для которой переопределяем onBackPressed();
-                        MainActivity.super.onBackPressed();
-                        VKAccessToken.tokenFromSharedPreferences(getApplicationContext(), "accessToken");
+
+//                        MainActivity.finish();
+                        VKAccessToken.removeTokenAtKey(getApplicationContext(), "accessToken");
+//                        android.os.Process.killProcess(android.os.Process.myPid());
+//                        MainActivity.super.onBackPressed();
+                        finish();
+
                     }
                 }).create().show();
     }

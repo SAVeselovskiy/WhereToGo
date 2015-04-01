@@ -38,7 +38,8 @@ public class Login extends Activity {//implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+//        String[] fingerprints = VKUtil.getCertificateFingerprint(this, this.getPackageName());
+//        VKSdk.getAccessToken();
         VKAccessToken token = VKAccessToken.tokenFromSharedPreferences(this, tokenKey);
         if (token != null){
             VKSdk.initialize(sdkListener, "4850781",token);
