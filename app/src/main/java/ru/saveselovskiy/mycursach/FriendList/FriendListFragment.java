@@ -20,6 +20,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import ru.saveselovskiy.mycursach.R;
 
 /**
@@ -45,12 +47,13 @@ public class FriendListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ListView rootView = (ListView)inflater.inflate(R.layout.fragment_friend_list, container,
+        final ListView rootView = (ListView)inflater.inflate(R.layout.fragment_friend_list, container,
                 false);
         VKApiFriends api = new VKApiFriends();
 //        api.get().addExtraParameters(VKParameters.from(VKApiConst.FIELDS, "last_name"));
         VKRequest request = api.get(VKParameters.from(VKApiConst.FIELDS, "last_name"));
 //        request.addExtraParameters(VKParameters.from(VKApiConst.FIELDS, "last_name"));
+        final ArrayList<String> names = new ArrayList<String>();
         request.executeWithListener(new VKRequest.VKRequestListener() {
             @Override
             public void onComplete(VKResponse response) {
@@ -59,6 +62,14 @@ public class FriendListFragment extends Fragment {
                 try {
                     JSONObject usersInfo = (JSONObject) obj.get("response");
                     JSONArray users = (JSONArray) usersInfo.get("items");
+                    for (int i = 0; i < (Integer)usersInfo.get("count"); i++) {
+                       String name = (String)((JSONObject)users.get(i)).get("first_name") + " " + (String)((JSONObject)users.get(i)).get("last_name");
+                        names.add(name);
+                    }
+                    ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(), R.layout.friend_list_item,names);
+                    getActivity().setTitle("Друзья");
+                    rootView.setAdapter(adapter);
+                    up = getActivity();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -67,10 +78,7 @@ public class FriendListFragment extends Fragment {
             }
         });
 //        api.get(VKParameters.from(VKApiConst.FIELDS,"last_name"));
-        ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(), R.layout.friend_list_item,new  String[]{"Рыжик", "Барсик", "Мурзик"});
-        getActivity().setTitle("Друзья");
-        rootView.setAdapter(adapter);
-        up = getActivity();
+
 //        getData();
         return rootView;
     }
