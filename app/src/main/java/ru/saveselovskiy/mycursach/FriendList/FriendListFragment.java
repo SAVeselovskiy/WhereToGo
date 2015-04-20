@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.vk.sdk.api.VKApi;
 import com.vk.sdk.api.VKApiConst;
@@ -60,6 +61,7 @@ public class FriendListFragment extends Fragment {
                 super.onComplete(response);
                 JSONObject obj =  response.json;
                 try {
+                    TextView textView = (TextView)getActivity().findViewById(R.id.text1);
                     JSONObject usersInfo = (JSONObject) obj.get("response");
                     JSONArray users = (JSONArray) usersInfo.get("items");
                     for (int i = 0; i < (Integer)usersInfo.get("count"); i++) {
