@@ -5,7 +5,6 @@
     android:layout_centerHorizontal="true"
     android:id="@+id/SA_friend_list"
     android:layout_alignParentTop="true"
-    android:background="@color/background_material_dark"
     android:layout_alignParentBottom="true">
 
 </ListView>

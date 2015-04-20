@@ -41,6 +41,7 @@ public class FriendListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getActivity().setTitle("Друзья");
 //        setRetainInstance(true);
     }
 
@@ -51,26 +52,32 @@ public class FriendListFragment extends Fragment {
         final ListView rootView = (ListView)inflater.inflate(R.layout.fragment_friend_list, container,
                 false);
         VKApiFriends api = new VKApiFriends();
-//        api.get().addExtraParameters(VKParameters.from(VKApiConst.FIELDS, "last_name"));
-        VKRequest request = api.get(VKParameters.from(VKApiConst.FIELDS, "last_name"));
-//        request.addExtraParameters(VKParameters.from(VKApiConst.FIELDS, "last_name"));
+        VKRequest request = api.get(VKParameters.from(VKApiConst.FIELDS, "photo_50"));
+
         final ArrayList<String> names = new ArrayList<String>();
+        final ArrayList<String> photos = new ArrayList<String>();
         request.executeWithListener(new VKRequest.VKRequestListener() {
             @Override
             public void onComplete(VKResponse response) {
                 super.onComplete(response);
                 JSONObject obj =  response.json;
                 try {
-                    TextView textView = (TextView)getActivity().findViewById(R.id.text1);
                     JSONObject usersInfo = (JSONObject) obj.get("response");
                     JSONArray users = (JSONArray) usersInfo.get("items");
                     for (int i = 0; i < (Integer)usersInfo.get("count"); i++) {
                        String name = (String)((JSONObject)users.get(i)).get("first_name") + " " + (String)((JSONObject)users.get(i)).get("last_name");
+                        String photoURL = (String) ((JSONObject)users.get(i)).get("photo_50");
                         names.add(name);
+                        photos.add(photoURL);
                     }
-                    ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(), R.layout.friend_list_item,names);
-                    getActivity().setTitle("Друзья");
-                    rootView.setAdapter(adapter);
+                    String[] photoArray = new String[photos.size()];
+                    photoArray = (String[])photos.toArray(photoArray);
+                    LazyAdapter myAdapter = new LazyAdapter(getActivity(),photoArray);
+                    myAdapter.names = names;
+//                    CustomListAdapter myAdapter = new CustomListAdapter(getActivity(),R.layout.friend_list_item,names,null);
+//                    ArrayAdapter<String> adapter = new ArrayAdapter(getActivity(), R.layout.friend_list_item,R.id.text1,names);
+
+                    rootView.setAdapter(myAdapter);
                     up = getActivity();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -84,4 +91,5 @@ public class FriendListFragment extends Fragment {
 //        getData();
         return rootView;
     }
+
 }
