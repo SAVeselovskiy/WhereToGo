@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -85,6 +86,10 @@ public class Login extends Activity {//implements View.OnClickListener{
         @Override
         public void onReceiveNewToken(VKAccessToken newToken) {
             newToken.saveTokenToSharedPreferences(getApplicationContext(), tokenKey);
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+            SharedPreferences.Editor edit = prefs.edit();
+            edit.putLong("currentUserId",Integer.parseInt(newToken.userId));
+            edit.apply();
             Intent intent = new Intent(getApplication(),MainActivity.class);
             startActivity(intent);
         }
