@@ -35,9 +35,11 @@ public class ImageLoader {
         executorService=Executors.newFixedThreadPool(5);
     }
     
-    final int stub_id= R.drawable.icon_user_default;
-    public void DisplayImage(String url, ImageView imageView)
+//    int stub_id= R.drawable.icon_user_default;
+    int stub_id;
+    public void DisplayImage(String url, ImageView imageView, int stub)
     {
+        stub_id = stub;
         imageViews.put(imageView, url);
         Bitmap bitmap=memoryCache.get(url);
         if(bitmap!=null)

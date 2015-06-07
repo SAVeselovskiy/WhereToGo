@@ -30,7 +30,9 @@ import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKScope;
 import com.vk.sdk.VKUIHelper;
 
+import ru.saveselovskiy.mycursach.Events.EventsFragment;
 import ru.saveselovskiy.mycursach.FriendList.FriendListFragment;
+import ru.saveselovskiy.mycursach.Model.EventsList;
 
 public class MainActivity extends ActionBarActivity {
     private Fragment currentFragment = null;
@@ -54,6 +56,7 @@ public class MainActivity extends ActionBarActivity {
                         new SecondaryDrawerItem().withName(R.string.drawer_item_cinema),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_theater),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_museum),
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_concert),
                         new DividerDrawerItem(),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_about).withIcon(FontAwesome.Icon.faw_question)
                 ).withOnDrawerListener(new Drawer.OnDrawerListener() {
@@ -76,9 +79,57 @@ public class MainActivity extends ActionBarActivity {
                         if (currentFragment != null && currentFragment instanceof FriendListFragment){
                             break;
                         }
+                        if (currentFragment != null) {
+                            getFragmentManager().beginTransaction().remove(currentFragment).commit();
+                        }
                         currentFragment = FriendListFragment.newInstance();
-                        getFragmentManager().beginTransaction().add(R.id.parent_container, currentFragment,FriendListFragment.TAG).commit();
-                        Toast.makeText(MainActivity.this, "did pressed" + position, Toast.LENGTH_SHORT).show();
+                        getFragmentManager().beginTransaction().add(R.id.parent_container, currentFragment, FriendListFragment.TAG).commit();
+                        break;
+                    }
+                    case 4:{
+
+                        EventsFragment eventsFragment = new EventsFragment();
+                        eventsFragment.typeId = 1;
+                        if (currentFragment != null) {
+                            getFragmentManager().beginTransaction().remove(currentFragment).commit();
+                        }
+                        currentFragment = eventsFragment;
+                        getFragmentManager().beginTransaction().add(R.id.parent_container, currentFragment,EventsFragment.TAG).commit();
+                        setTitle("Кино");
+                        break;
+                    }
+                    case 5:{
+
+                        EventsFragment eventsFragment = new EventsFragment();
+                        eventsFragment.typeId = 2;
+                        if (currentFragment != null) {
+                            getFragmentManager().beginTransaction().remove(currentFragment).commit();
+                        }
+                        currentFragment = eventsFragment;
+                        getFragmentManager().beginTransaction().add(R.id.parent_container, currentFragment,EventsFragment.TAG).commit();
+                        setTitle("Театры");
+                        break;
+                    }
+                    case 6:{
+                        EventsFragment eventsFragment = new EventsFragment();
+                        eventsFragment.typeId = 3;
+                        if (currentFragment != null) {
+                            getFragmentManager().beginTransaction().remove(currentFragment).commit();
+                        }
+                        currentFragment = eventsFragment;
+                        getFragmentManager().beginTransaction().add(R.id.parent_container, currentFragment,EventsFragment.TAG).commit();
+                        setTitle("Выставки");
+                        break;
+                    }
+                    case 7:{
+                        EventsFragment eventsFragment = new EventsFragment();
+                        eventsFragment.typeId = 4;
+                        if (currentFragment != null) {
+                            getFragmentManager().beginTransaction().remove(currentFragment).commit();
+                        }
+                        currentFragment = eventsFragment;
+                        getFragmentManager().beginTransaction().add(R.id.parent_container, currentFragment,EventsFragment.TAG).commit();
+                        setTitle("Концерты");
                         break;
                     }
                     default:{

@@ -45,13 +45,13 @@ public class LazyAdapter extends BaseAdapter {
         if(convertView==null)
             vi = inflater.inflate(R.layout.friend_list_item, null);
 
-        TextView text=(TextView)vi.findViewById(R.id.text1);;
+        TextView text=(TextView)vi.findViewById(R.id.text1);
         ImageView image=(ImageView)vi.findViewById(R.id.imageView2);
         text.setText(names.get(position));
         if (data == null){
             image.setImageResource(R.drawable.icon_user_default);
         }else {
-            imageLoader.DisplayImage(data[position], image);
+            imageLoader.DisplayImage(data[position], image,R.drawable.icon_user_default);
         }
         return vi;
     }

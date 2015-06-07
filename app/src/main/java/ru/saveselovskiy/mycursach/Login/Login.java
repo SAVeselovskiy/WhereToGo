@@ -3,6 +3,7 @@ package ru.saveselovskiy.mycursach.Login;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,8 +23,16 @@ import com.vk.sdk.api.VKError;
 import com.vk.sdk.dialogs.VKCaptchaDialog;
 import com.vk.sdk.util.VKUtil;
 
+import org.json.JSONObject;
+
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 import ru.saveselovskiy.mycursach.MainActivity;
 import ru.saveselovskiy.mycursach.R;
+import ru.saveselovskiy.mycursach.ServerWorker.ServerAdapter;
+import ru.saveselovskiy.mycursach.ServerWorker.ServerWorker;
 
 /**
  * Created by Admin on 27.03.2015.
@@ -85,13 +94,40 @@ public class Login extends Activity {//implements View.OnClickListener{
 
         @Override
         public void onReceiveNewToken(VKAccessToken newToken) {
-            newToken.saveTokenToSharedPreferences(getApplicationContext(), tokenKey);
-            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-            SharedPreferences.Editor edit = prefs.edit();
-            edit.putLong("currentUserId",Integer.parseInt(newToken.userId));
-            edit.apply();
-            Intent intent = new Intent(getApplication(),MainActivity.class);
-            startActivity(intent);
+            final VKAccessToken myToken = newToken;
+            RestAdapter restAdapter = ServerAdapter.getAdapter();
+            ServerWorker serverWorker = restAdapter.create(ServerWorker.class);
+            serverWorker.postUser(Integer.parseInt(newToken.userId), new Callback<JSONObject>() {
+                @Override
+                public void success(JSONObject jsonObject, Response response) {
+                    myToken.saveTokenToSharedPreferences(getApplicationContext(), tokenKey);
+                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    SharedPreferences.Editor edit = prefs.edit();
+                    edit.putLong("currentUserId", Integer.parseInt(myToken.userId));
+                    edit.apply();
+
+
+                    Intent intent = new Intent(getApplication(), MainActivity.class);
+                    startActivity(intent);
+                }
+
+                @Override
+                public void failure(RetrofitError retrofitError) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
+                    builder.setTitle(retrofitError.getLocalizedMessage())
+                            .setMessage(retrofitError.getMessage())
+                            .setCancelable(false)
+                            .setNegativeButton("OK",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+            });
+
         }
         @Override
         public void onAcceptUserToken(VKAccessToken token) {
