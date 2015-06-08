@@ -19,6 +19,11 @@
     <string name="drawer_item_museum">Выставки</string>
     <string name="drawer_item_about">О Программе</string>
 
+    <string name="add_favorite_done">Добавлено</string>
+    <string name="add_favorite">Добавить +</string>
+    <string name="invite">Пригласить</string>
+
+
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

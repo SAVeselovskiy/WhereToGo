@@ -2,6 +2,8 @@ package ru.saveselovskiy.mycursach.Events;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Parcel;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +47,7 @@ public class EventsListAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View vi=convertView;
         if(convertView==null)
             vi = inflater.inflate(R.layout.events_list_cell, null);
@@ -60,6 +62,14 @@ public class EventsListAdapter extends BaseAdapter {
         else{
             icon.setImageResource(placeholderImage(events[position].typeId));
         }
+        vi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(activity,DetailEventActivity.class);
+                intent.putExtra(Event.class.getCanonicalName(),events[position]);
+                activity.startActivity(intent);
+            }
+        });
         return vi;
     }
 

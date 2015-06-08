@@ -21,14 +21,19 @@ import ru.saveselovskiy.mycursach.Model.Invites;
 public interface ServerWorker {
     @GET("/events")
      void getEventsList(@Query("type") int typeId, Callback<EventsList> callback);
-    @GET("/invites/{id}")
-     void getMyInvites(@Path("id") int myVkId, Callback<Invites> callback);
-    @POST("/invites/{id}")
-    public void inviteFrientWithId(@Path("id") int friendId, Callback<JSONObject> callback);
+    @GET("/invites")
+     void getMyInvites(@Query("id") int myVkId, Callback<Invites> callback);
+
+    @FormUrlEncoded
+    @POST("/invites")
+    void inviteFrientWithId(@Field("senderId") int myId, @Field("receiverId") String friendsId, @Field("eventId") int eventId, Callback<JSONObject> callback);
 
     @GET("/friends")
      void getFriends(@Query("id") String indentifires, Callback<Friends> callback);
     @FormUrlEncoded
     @POST("/current")
      void postUser(@Field("id") int vk_id, Callback<JSONObject> callback);
+
+    @GET("/events/{id}/photo")
+    void getEventPhoto(@Path("id") int id, Callback<Response> callback);
 }

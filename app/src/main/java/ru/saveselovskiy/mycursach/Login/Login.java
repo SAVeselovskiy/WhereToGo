@@ -103,7 +103,7 @@ public class Login extends Activity {//implements View.OnClickListener{
                     myToken.saveTokenToSharedPreferences(getApplicationContext(), tokenKey);
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     SharedPreferences.Editor edit = prefs.edit();
-                    edit.putLong("currentUserId", Integer.parseInt(myToken.userId));
+                    edit.putInt("currentUserId", Integer.parseInt(myToken.userId));
                     edit.apply();
 
 
