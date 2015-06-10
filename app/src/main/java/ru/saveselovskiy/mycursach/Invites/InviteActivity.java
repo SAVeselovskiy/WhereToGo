@@ -38,6 +38,7 @@ import ru.saveselovskiy.mycursach.Model.Friends;
 import ru.saveselovskiy.mycursach.R;
 import ru.saveselovskiy.mycursach.ServerWorker.ServerAdapter;
 import ru.saveselovskiy.mycursach.ServerWorker.ServerWorker;
+import ru.saveselovskiy.mycursach.SupportFiles.ProgressDialogFragment;
 
 /**
  * Created by Admin on 08.06.2015.
@@ -171,7 +172,8 @@ public class InviteActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.send_invites) {
-            Log.d("myLog","done button pressed");
+            ProgressDialogFragment.showProgressDialog(getFragmentManager(),"Отправка...",false);
+            Log.d("myLog", "done button pressed");
             String friendsId = "";
             for (int i = 0; i < recieversId.size(); i++) {
                 if (i == 0) {
@@ -188,12 +190,14 @@ public class InviteActivity extends ActionBarActivity {
             serverWorker.inviteFrientWithId(myId, friendsId, eventId, new Callback<JSONObject>() {
                 @Override
                 public void success(JSONObject jsonObject, Response response) {
-                    Toast.makeText(InviteActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                    ProgressDialogFragment.closeProgressDialogSuccessfully(getFragmentManager());
+//                    Toast.makeText(InviteActivity.this, "Success", Toast.LENGTH_SHORT).show();
                     finish();
                 }
 
                 @Override
                 public void failure(RetrofitError error) {
+                    ProgressDialogFragment.closeProgressDialogSuccessfully(getFragmentManager());
                     AlertDialog.Builder builder = new AlertDialog.Builder(InviteActivity.this);
                     builder.setTitle(error.getLocalizedMessage())
                             .setMessage(error.getMessage())

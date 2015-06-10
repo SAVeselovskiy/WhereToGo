@@ -10,5 +10,8 @@ public class Invite {
     public int sender;
 
     @SerializedName("event")
-    public int event;
+    public Event event;
+
+    @SerializedName("senderName")
+    public  String senderName;
 }

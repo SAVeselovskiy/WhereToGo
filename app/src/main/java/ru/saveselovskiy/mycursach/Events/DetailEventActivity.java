@@ -8,6 +8,8 @@ import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -32,6 +34,8 @@ import ru.saveselovskiy.mycursach.ServerWorker.ServerWorker;
  */
 public class DetailEventActivity extends ActionBarActivity {
     Event event;
+    int eventId;
+    Button addButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,9 +44,7 @@ public class DetailEventActivity extends ActionBarActivity {
         if (actionBar != null)
             actionBar.setDisplayHomeAsUpEnabled(true);
         final Event event = getIntent().getParcelableExtra(Event.class.getCanonicalName());
-        if (event != null){
-            Log.d("myLog",event.name);
-        }
+        eventId = event.id;
 
 
         TextView name = (TextView) findViewById(R.id.detail_event_name);
@@ -84,6 +86,7 @@ public class DetailEventActivity extends ActionBarActivity {
 
 
         final Button addFavorites = (Button) findViewById(R.id.add_favorites_button);
+        addButton = addFavorites;
         if (isInFavorites(event.id)){
             addFavorites.setText(R.string.add_favorite_done);
             addFavorites.setEnabled(false);
@@ -95,10 +98,10 @@ public class DetailEventActivity extends ActionBarActivity {
             public void onClick(View v) {
                 SharedPreferences sharedPreferences = getSharedPreferences("Favorites", MODE_PRIVATE);
                 String favorites = sharedPreferences.getString("events",null);
-                if (favorites == null){
+                if (favorites == null || favorites == ""){
                     favorites = "" + event.id;
                 }else{
-                    favorites.concat(","+event.id);
+                    favorites = favorites + "," + event.id;
                 }
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("events",favorites);
@@ -111,7 +114,7 @@ public class DetailEventActivity extends ActionBarActivity {
     private boolean isInFavorites(int id){
         SharedPreferences sharedPreferences = getSharedPreferences("Favorites", MODE_PRIVATE);
         String favorites = sharedPreferences.getString("events",null);
-        if (favorites == null){
+        if (favorites == null || favorites == ""){
             return false;
         }
         String[] identifires = favorites.split(",");
@@ -122,8 +125,44 @@ public class DetailEventActivity extends ActionBarActivity {
         }
         return false;
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_detail_event, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
     public boolean onOptionsItemSelected(MenuItem item){
-        finish();
+        int id = item.getItemId();
+        if (id == R.id.event_settings){
+            if (!isInFavorites(eventId)){
+                return false;
+            }
+            SharedPreferences sharedPreferences = getSharedPreferences("Favorites", MODE_PRIVATE);
+            String favorites = sharedPreferences.getString("events",null);
+            String result = "";
+            String[] events = favorites.split(",");
+            int j = 0;
+            for (int i = 0; i < events.length; i++) {
+                if (eventId != Integer.parseInt(events[i])){
+                    if (j == 0){
+                        result = result + events[i];
+                    }else{
+                        result = result + "," + events[i];
+                    }
+                    j++;
+                }
+            }
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("events", result);
+            editor.commit();
+            addButton.setEnabled(true);
+            addButton.setText("Добавить +");
+        }
+        else {
+            finish();
+        }
         return true;
 
     }

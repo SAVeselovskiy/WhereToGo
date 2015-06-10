@@ -1,9 +1,8 @@
-package ru.saveselovskiy.mycursach.Events;
+package ru.saveselovskiy.mycursach.Invites;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcel;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,39 +10,41 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import ru.saveselovskiy.mycursach.Events.DetailEventActivity;
 import ru.saveselovskiy.mycursach.FriendList.ImageLoader;
 import ru.saveselovskiy.mycursach.Model.Event;
+import ru.saveselovskiy.mycursach.Model.Invite;
 import ru.saveselovskiy.mycursach.R;
 
 /**
- * Created by Admin on 07.06.2015.
+ * Created by Admin on 11.06.2015.
  */
-public class EventsListAdapter extends BaseAdapter {
+public class InviteListAdapter extends BaseAdapter {
     private static String API_URL = "http://54.200.192.248:44480";
-    private Event[] events;
+    private Invite[] invites;
     Activity activity;
     private static LayoutInflater inflater=null;
     public ImageLoader imageLoader;
 
-    public EventsListAdapter(Activity a, Event[] array){
+    public InviteListAdapter(Activity a, Invite[] array){
         activity = a;
-        events = array;
+        invites = array;
         inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         imageLoader=new ImageLoader(activity.getApplicationContext());
     }
     @Override
     public int getCount() {
-        return events.length;
+        return invites.length;
     }
 
     @Override
     public Object getItem(int position) {
-        return events[position];
+        return invites[position];
     }
 
     @Override
     public long getItemId(int position) {
-        return events[position].id;
+        return position;
     }
 
     @Override
@@ -54,19 +55,20 @@ public class EventsListAdapter extends BaseAdapter {
         TextView name = (TextView)vi.findViewById(R.id.event_cell_title);
         TextView description = (TextView)vi.findViewById(R.id.event_cell_subtitle);
         ImageView icon = (ImageView)vi.findViewById(R.id.event_icon);
-        name.setText(events[position].name);
-        description.setText(events[position].description);
-        if (events[position].hasPhoto){
-            imageLoader.DisplayImage(urlForIcon(events[position].id), icon, placeholderImage(events[position].typeId));
+        name.setText(invites[position].event.name);
+        String desc = invites[position].senderName + " пригласил вас";
+        description.setText(desc);
+        if (invites[position].event.hasPhoto){
+            imageLoader.DisplayImage(urlForIcon(invites[position].event.id), icon, placeholderImage(invites[position].event.typeId));
         }
         else{
-            icon.setImageResource(placeholderImage(events[position].typeId));
+            icon.setImageResource(placeholderImage(invites[position].event.typeId));
         }
         vi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(activity,DetailEventActivity.class);
-                intent.putExtra(Event.class.getCanonicalName(),events[position]);
+                intent.putExtra(Event.class.getCanonicalName(), invites[position].event);
                 activity.startActivity(intent);
             }
         });

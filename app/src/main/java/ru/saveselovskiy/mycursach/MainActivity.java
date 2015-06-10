@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -31,7 +32,9 @@ import com.vk.sdk.VKScope;
 import com.vk.sdk.VKUIHelper;
 
 import ru.saveselovskiy.mycursach.Events.EventsFragment;
+import ru.saveselovskiy.mycursach.Favorites.FavoritesFragment;
 import ru.saveselovskiy.mycursach.FriendList.FriendListFragment;
+import ru.saveselovskiy.mycursach.Invites.IncomingInvitesFragment;
 import ru.saveselovskiy.mycursach.Model.EventsList;
 
 public class MainActivity extends ActionBarActivity {
@@ -42,6 +45,13 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         String str = "need changes";
+
+//        SharedPreferences sharedPreferences = getSharedPreferences("Favorites", MODE_PRIVATE);
+//        String favorites = sharedPreferences.getString("events",null);
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.remove("events");
+//        editor.commit();
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         new Drawer()
@@ -52,6 +62,7 @@ public class MainActivity extends ActionBarActivity {
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName(R.string.drawer_item_friend_list),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_invitation),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_favorites),
                         new SectionDrawerItem().withName(R.string.drawer_item_events),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_cinema),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_theater),
@@ -86,7 +97,27 @@ public class MainActivity extends ActionBarActivity {
                         getFragmentManager().beginTransaction().add(R.id.parent_container, currentFragment, FriendListFragment.TAG).commit();
                         break;
                     }
-                    case 4:{
+                    case 2:{
+                        IncomingInvitesFragment eventsFragment = new IncomingInvitesFragment();
+                        if (currentFragment != null) {
+                            getFragmentManager().beginTransaction().remove(currentFragment).commit();
+                        }
+                        currentFragment = eventsFragment;
+                        getFragmentManager().beginTransaction().add(R.id.parent_container, currentFragment,EventsFragment.TAG).commit();
+                        setTitle("Приглашения");
+                        break;
+                    }
+                    case 3:{
+                        FavoritesFragment eventsFragment = new FavoritesFragment();
+                        if (currentFragment != null) {
+                            getFragmentManager().beginTransaction().remove(currentFragment).commit();
+                        }
+                        currentFragment = eventsFragment;
+                        getFragmentManager().beginTransaction().add(R.id.parent_container, currentFragment,EventsFragment.TAG).commit();
+                        setTitle("Избранное");
+                        break;
+                    }
+                    case 5:{
 
                         EventsFragment eventsFragment = new EventsFragment();
                         eventsFragment.typeId = 1;
@@ -98,7 +129,7 @@ public class MainActivity extends ActionBarActivity {
                         setTitle("Кино");
                         break;
                     }
-                    case 5:{
+                    case 6:{
 
                         EventsFragment eventsFragment = new EventsFragment();
                         eventsFragment.typeId = 2;
@@ -110,7 +141,7 @@ public class MainActivity extends ActionBarActivity {
                         setTitle("Театры");
                         break;
                     }
-                    case 6:{
+                    case 7:{
                         EventsFragment eventsFragment = new EventsFragment();
                         eventsFragment.typeId = 3;
                         if (currentFragment != null) {
@@ -121,7 +152,7 @@ public class MainActivity extends ActionBarActivity {
                         setTitle("Выставки");
                         break;
                     }
-                    case 7:{
+                    case 8:{
                         EventsFragment eventsFragment = new EventsFragment();
                         eventsFragment.typeId = 4;
                         if (currentFragment != null) {

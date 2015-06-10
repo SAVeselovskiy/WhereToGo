@@ -1,5 +1,7 @@
 package ru.saveselovskiy.mycursach.ServerWorker;
 
+import android.provider.CalendarContract;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -32,8 +34,11 @@ public interface ServerWorker {
      void getFriends(@Query("id") String indentifires, Callback<Friends> callback);
     @FormUrlEncoded
     @POST("/current")
-     void postUser(@Field("id") int vk_id, Callback<JSONObject> callback);
+     void postUser(@Field("id") int vk_id, @Field("name") String name, Callback<JSONObject> callback);
 
-    @GET("/events/{id}/photo")
+    @GET("/photo/{id}")
     void getEventPhoto(@Path("id") int id, Callback<Response> callback);
+
+    @GET("/favorites")
+    void getFavorites(@Query("events") String eventsId, Callback<EventsList> callback);
 }

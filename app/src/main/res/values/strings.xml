@@ -13,6 +13,7 @@
     
     <string name="drawer_item_friend_list">Мои друзья</string>
     <string name="drawer_item_invitation">Приглашения</string>
+    <string name="drawer_item_favorites">Избранное</string>
     <string name="drawer_item_events">Мероприятия</string>
     <string name="drawer_item_cinema">Кино</string>
     <string name="drawer_item_theater">Театры</string>
@@ -22,6 +23,7 @@
     <string name="add_favorite_done">Добавлено</string>
     <string name="add_favorite">Добавить +</string>
     <string name="invite">Пригласить</string>
+    <string name="sending">Отправка...</string>
 
 
 <!-- TODO: Remove or change this placeholder text -->

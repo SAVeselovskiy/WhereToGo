@@ -25,7 +25,8 @@
         android:layout_toRightOf="@+id/event_icon"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:paddingTop="5dp"/>
+        android:paddingTop="5dp"
+        android:textColor="#000000"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -38,5 +39,6 @@
         android:layout_toEndOf="@+id/event_icon"
         android:layout_alignBottom="@+id/event_icon"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"  />
+        android:layout_alignParentEnd="true"
+        android:textColor="#000000"/>
 </RelativeLayout>
