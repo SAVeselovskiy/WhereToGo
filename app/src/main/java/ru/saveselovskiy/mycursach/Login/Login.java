@@ -116,7 +116,7 @@ public class Login extends Activity {//implements View.OnClickListener{
             startActivity(intent);
 
             VKApiUsers vkApiUser = new VKApiUsers();
-            VKRequest request = vkApiUser.get(VKParameters.from(VKApiConst.FIELDS, "first_name"));
+            VKRequest request = vkApiUser.get(VKParameters.from(VKApiConst.FIELDS, "first_name,photo_100"));
             request.executeWithListener(new VKRequest.VKRequestListener() {
                 @Override
                 public void onComplete(VKResponse response) {
@@ -125,8 +125,10 @@ public class Login extends Activity {//implements View.OnClickListener{
                         JSONArray array = obj.getJSONArray("response");
                         JSONObject me = (JSONObject) array.get(0);
                         String myName =  me.getString("first_name") + " " +me.getString("last_name");
+                        String photo = me.getString("photo_100");
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString("currentUserName",myName);
+                        editor.putString("userPhotoURL", photo);
                         editor.commit();
                         serverWorker.postUser(Integer.parseInt(myToken.userId),myName, new Callback<JSONObject>() {
                             @Override
