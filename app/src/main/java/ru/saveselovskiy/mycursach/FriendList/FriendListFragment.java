@@ -60,41 +60,42 @@ public class FriendListFragment extends Fragment {
 //        setRetainInstance(true);
     }
 
-
+//Создаем View для фрагмента
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //по id находим все subview
         View rootView = inflater.inflate(R.layout.fragment_friend_list, container,
                 false);
         final ListView friendList = (ListView)rootView.findViewById(R.id.SA_friend_list);
         final ProgressBar friendsProgress = (ProgressBar)rootView.findViewById(R.id.friends_list_progress);
         VKApiFriends api = new VKApiFriends();
-        VKRequest request = api.get(VKParameters.from(VKApiConst.FIELDS, "photo_50"));
+        VKRequest request = api.get(VKParameters.from(VKApiConst.FIELDS, "photo_50")); //создаем запрос с параметрами для VKApi
 
 
         request.executeWithListener(new VKRequest.VKRequestListener() {
             @Override
             public void onComplete(VKResponse response) {
                 super.onComplete(response);
-                JSONObject obj =  response.json;
+                JSONObject obj =  response.json;//ответ VKApi - JSON строка, содержащая информацию о друзьях
                 try {
                     JSONObject usersInfo = (JSONObject) obj.get("response");
                     final JSONArray users = (JSONArray) usersInfo.get("items");
 
-                    String identifires = stringWithIdentifires(users);
+                    String identifires = stringWithIdentifires(users); //берем из массива JSON объектов строку, содержащую список id пользователей
                     RestAdapter restAdapter = ServerAdapter.getAdapter();
                     ServerWorker serverWorker = restAdapter.create(ServerWorker.class);
-                    serverWorker.getFriends(identifires, new Callback<Friends>() {
+                    serverWorker.getFriends(identifires, new Callback<Friends>() { //сверяем со списком авторизированных пользователей на сервере
                         @Override
                         public void success(Friends friendsList, Response response) {
                             Log.d("myTag","im in success");
                             try {
-                                JSONArray friends = compareFriendLists(users,friendsList.friends);
+                                JSONArray friends = compareFriendLists(users,friendsList.friends); //получаем список друзей, установивших приложение
                                 for (int i = 0; i < friends.length(); i++) {
                                     String name = (String) ((JSONObject) friends.get(i)).get("first_name") + " " + (String) ((JSONObject) friends.get(i)).get("last_name");
                                     String photoURL = (String) ((JSONObject) friends.get(i)).get("photo_50");
                                     names.add(name);
-                                    photos.add(photoURL);
+                                    photos.add(photoURL); //берем информацию о пользователях из JSON и записываем в массивы
                                 }
                             }catch(org.json.JSONException e){
                                 Log.d("myTag",e.getLocalizedMessage());
@@ -104,12 +105,12 @@ public class FriendListFragment extends Fragment {
                             photoArray = (String[])photos.toArray(photoArray);
                             LazyAdapter myAdapter = new LazyAdapter(getActivity(),photoArray);
                             myAdapter.names = names;
-                            friendList.setAdapter(myAdapter);
+                            friendList.setAdapter(myAdapter); //Для списка друзей назначаем адаптер, который будет формировать элемент списка на основе информации о пользователях
                             up = getActivity();
                         }
 
                         @Override
-                        public void failure(RetrofitError retrofitError) {
+                        public void failure(RetrofitError retrofitError) { //в случае ошибки выводим сообщение
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             builder.setTitle(retrofitError.getLocalizedMessage())
                                     .setMessage(retrofitError.getMessage())
@@ -135,6 +136,7 @@ public class FriendListFragment extends Fragment {
         return rootView;
     }
 
+    //формируем строку с индентификаторами пользователей
     private String stringWithIdentifires(JSONArray friends){
         String identifires = "";
         try {
@@ -148,6 +150,7 @@ public class FriendListFragment extends Fragment {
         return identifires;
     }
 
+    //Из массива с информацией о пользователях выбираем те записи, которые относятся к друзьям, установившим приложения
     private JSONArray compareFriendLists(JSONArray users, Friend[] friends){
         JSONArray newArray = new JSONArray();
         try {

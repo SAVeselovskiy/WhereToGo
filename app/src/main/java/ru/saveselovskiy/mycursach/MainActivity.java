@@ -56,19 +56,14 @@ public class MainActivity extends ActionBarActivity {
     private AccountHeader headerResult = null;
     private Drawer result = null;
 
+
+    //метод вызывающийся при создании Активности
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        String str = "need changes";
-
-//        SharedPreferences sharedPreferences = getSharedPreferences("Favorites", MODE_PRIVATE);
-//        String favorites = sharedPreferences.getString("events",null);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.remove("events");
-//        editor.commit();
-
+        //Берм из SharedPreferences информацию о пользователе
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String name = prefs.getString("currentUserName", "My name");
         final String photoURL = prefs.getString("userPhotoURL", "");
@@ -81,7 +76,7 @@ public class MainActivity extends ActionBarActivity {
         imageLoader.DisplayImage(photoURL, imageView, R.drawable.icon_user_default);
 
 
-
+        //создаем Заголов для NavigationDrawer, который содержит фото и имя пользователя
 
         headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -97,6 +92,7 @@ public class MainActivity extends ActionBarActivity {
                 })
                 .build();
 
+        //Создаем сам NavigationDrawer, добавляем слушателя на нажатие на элементы списка
         result = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
@@ -105,9 +101,9 @@ public class MainActivity extends ActionBarActivity {
                         new PrimaryDrawerItem().withName(R.string.drawer_item_friend_list).withIdentifier(1),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_invitation),
                         new PrimaryDrawerItem().withName(R.string.drawer_item_favorites),
+                        new PrimaryDrawerItem().withName(R.string.drawer_item_theater),
                         new SectionDrawerItem().withName(R.string.drawer_item_events),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_cinema),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_theater),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_museum),
                         new SecondaryDrawerItem().withName(R.string.drawer_item_concert),
                         new DividerDrawerItem(),
@@ -116,7 +112,7 @@ public class MainActivity extends ActionBarActivity {
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
-                        // do something with the clicked item :D
+                        //В зависимости от позиции нажатого элемента удаляем старый фрагмент и добавляем новый
                         switch (position) {
                             case 0: {
                                 if (currentFragment != null && currentFragment instanceof FriendListFragment) {
@@ -149,7 +145,7 @@ public class MainActivity extends ActionBarActivity {
                                 setTitle("Избранное");
                                 break;
                             }
-                            case 4: {
+                            case 5: {
 
                                 EventsFragment eventsFragment = new EventsFragment();
                                 eventsFragment.typeId = 1;
@@ -161,7 +157,7 @@ public class MainActivity extends ActionBarActivity {
                                 setTitle("Кино");
                                 break;
                             }
-                            case 5: {
+                            case 3: {
 
                                 EventsFragment eventsFragment = new EventsFragment();
                                 eventsFragment.typeId = 2;
@@ -170,7 +166,7 @@ public class MainActivity extends ActionBarActivity {
                                 }
                                 currentFragment = eventsFragment;
                                 getFragmentManager().beginTransaction().add(R.id.parent_container, currentFragment, EventsFragment.TAG).commit();
-                                setTitle("Театры");
+                                setTitle("Вакансии");
                                 break;
                             }
                             case 6: {
@@ -207,42 +203,6 @@ public class MainActivity extends ActionBarActivity {
                     }
                 })
                 .build();
-//        new Drawer()
-//                .withActivity(this)
-//                .withToolbar(toolbar)
-//                .withActionBarDrawerToggle(true)
-//                .withHeader(R.layout.drawer_header)
-//                .addDrawerItems(
-//                        new PrimaryDrawerItem().withName(R.string.drawer_item_friend_list),
-//                        new PrimaryDrawerItem().withName(R.string.drawer_item_invitation),
-//                        new PrimaryDrawerItem().withName(R.string.drawer_item_favorites),
-//                        new SectionDrawerItem().withName(R.string.drawer_item_events),
-//                        new SecondaryDrawerItem().withName(R.string.drawer_item_cinema),
-//                        new SecondaryDrawerItem().withName(R.string.drawer_item_theater),
-//                        new SecondaryDrawerItem().withName(R.string.drawer_item_museum),
-//                        new SecondaryDrawerItem().withName(R.string.drawer_item_concert),
-//                        new DividerDrawerItem(),
-//                        new SecondaryDrawerItem().withName(R.string.drawer_item_about).withIcon(FontAwesome.Icon.faw_question)
-//                ).withOnDrawerListener(new Drawer.OnDrawerListener() {
-//            @Override
-//            public void onDrawerOpened(View drawerView) {
-//                InputMethodManager inputMethodManager = (InputMethodManager) MainActivity.this.getSystemService(Activity.INPUT_METHOD_SERVICE);
-//                inputMethodManager.hideSoftInputFromWindow(MainActivity.this.getCurrentFocus().getWindowToken(), 0);
-//            }
-//
-//            @Override
-//            public void onDrawerClosed(View drawerView) {
-//
-//            }
-//        }).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-//            @Override
-//            // Обработка клика
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
-//
-//
-//            }
-//        })
-//                .build();
         if (currentFragment != null){
             currentFragment = FriendListFragment.newInstance();
             getFragmentManager().beginTransaction().add(R.id.parent_container, currentFragment, FriendListFragment.TAG).commit();
@@ -256,22 +216,7 @@ public class MainActivity extends ActionBarActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
+    //определяем методы жизненного цикла Activity. В каждом надо вызывать метод с таким же именем у VKUIHelper, для корректной работы Android SDK
     @Override
     protected void onResume() {
         super.onResume();
@@ -290,6 +235,8 @@ public class MainActivity extends ActionBarActivity {
         VKUIHelper.onActivityResult(this, requestCode, resultCode, data);
     }
 
+
+    //Обработчик нажатия кнопки Back. По нажатию происходит выход из аккаунта
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)
@@ -298,12 +245,7 @@ public class MainActivity extends ActionBarActivity {
                 .setNegativeButton(android.R.string.no, null)
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface arg0, int arg1) {
-                        //SomeActivity - имя класса Activity для которой переопределяем onBackPressed();
-
-//                        MainActivity.finish();
                         VKAccessToken.removeTokenAtKey(getApplicationContext(), "accessToken");
-//                        android.os.Process.killProcess(android.os.Process.myPid());
-//                        MainActivity.super.onBackPressed();
                         finish();
 
                     }

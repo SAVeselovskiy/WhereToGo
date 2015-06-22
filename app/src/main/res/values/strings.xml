@@ -16,7 +16,7 @@
     <string name="drawer_item_favorites">Избранное</string>
     <string name="drawer_item_events">Мероприятия</string>
     <string name="drawer_item_cinema">Кино</string>
-    <string name="drawer_item_theater">Театры</string>
+    <string name="drawer_item_theater">Вакансии</string>
     <string name="drawer_item_museum">Выставки</string>
     <string name="drawer_item_about">О Программе</string>
 
